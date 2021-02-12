@@ -1,6 +1,8 @@
 const path = require('path');
 const fs = require('fs');
 const imageThumbnail = require('image-thumbnail');
+
+// jwt
 const dotenv = require("dotenv");
 dotenv.config();
 const jwt = require("jsonwebtoken");
@@ -26,21 +28,15 @@ let RouterModel = model => class extends model {
     }
 
     static async lihatByEmailPasswordRouter(req, res){
+       
         const data = await model.lihatByEmailPassword(req.body.email, req.body.password);
-
         if(data == null){
             res.send({status: false, data: null})
         }else{
-            const token = generateAccessToken({ email: req.body.email });
+            const token = model.generateAccessToken({email: req.body.email});
             res.send({status: true, data: token})
         }
-        // try {
-        //     const data = await model.lihatByEmailPassword(req.body.email, req.body.password);
-            
-        //     res.send({status: true, data: data});
-        // } catch (error) {
-        //     res.send({status: false, data: error.message});
-        // }
+        
     }
 
     static async temukanRouter(req, res){
@@ -172,10 +168,19 @@ let RouterModel = model => class extends model {
             res.send({status: false, message: error.message});
         }
     } 
-}
 
-function generateAccessToken(email) {
-    return jwt.sign(email, process.env.TOKEN_SECRET, { expiresIn: '1800s' });
+    static token(req, res, next) {
+        // Gather the jwt access token from the request header
+        const authHeader = req.headers['authorization']
+        const token = authHeader && authHeader.split(' ')[1]
+        if (token == null) return res.sendStatus(401) // if there isn't any token
+    
+        jwt.verify(token, process.env.TOKEN_SECRET, (err, user) => {
+            if (err) return res.sendStatus(403)
+            req.user = user
+            next() // pass the execution off to whatever request the client intended
+        })
+    }
 }
 
 module.exports = { RouterModel }

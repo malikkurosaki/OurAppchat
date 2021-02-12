@@ -3,14 +3,7 @@ const { sequelize} = require('../db');
 const { DbModel } = require('../models/db_model');
 const { RouterModel } = require('../models/router_model');
 
-class User extends DbModel{
-    static fake = {
-        name: Math.random().toString(26).substring(7),
-        email: Math.random().toString(26).substring(7),
-        password: Math.random().toString(26).substring(7)
-    }
-}
-
+class User extends DbModel{}
 User.init({
     first_name: {
         type: DataTypes.STRING,
@@ -39,6 +32,5 @@ User.init({
     }
 },{ sequelize,underscored: true, timestamps: false})
 
-
 class Users extends RouterModel(User){}
-module.exports = { User, Users }
+module.exports = { Users }

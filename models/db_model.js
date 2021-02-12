@@ -1,5 +1,10 @@
 const {Op, DataTypes, Model } = require('sequelize')
 
+// jwt
+const dotenv = require("dotenv");
+dotenv.config();
+const jwt = require("jsonwebtoken");
+
 class DbModel extends Model {
 
     static async lihatSemua(){
@@ -97,6 +102,12 @@ class DbModel extends Model {
         return await this.findAll({
             attributes: ['user_id', 'name']
         })
+    }
+
+    static generateAccessToken(email) {
+        // 86400 (24 jam)
+        // generate secret token : require('crypto').randomBytes(64).toString('hex')
+        return jwt.sign(email, process.env.TOKEN_SECRET, { expiresIn: '86400s' });
     }
     
 }
