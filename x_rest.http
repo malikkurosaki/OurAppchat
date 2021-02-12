@@ -1,0 +1,28 @@
+@host = localhost:8000/api
+
+###
+GET {{host}}/ HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImVtYWlsQGdtYWlsLmNvbSIsImlhdCI6MTYxMzEzNTYwNiwiZXhwIjoxNjEzMTM3NDA2fQ.6TxVlezNZingW_kYWNZXIT6_CO9hBfsvhEg1MFG8p2U
+
+### signup 
+POST {{host}}/simpan-user HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer JWT_ACCESS_TOKEN
+
+{
+    "first_name": "malik",
+    "last_name": "siapa",
+    "email": "email1@gmail.com",
+    "password": "12345",
+    "phone_number": "081"
+}
+
+### login
+POST {{host}}/user-login HTTP/1.1
+Content-Type: application/json
+
+
+{
+    "email": "email@gmail.com",
+    "password": "12345"
+}
